@@ -13,6 +13,7 @@ Raket.Terrain = (function() {
 		this.canvas = Raket.Canvas.canvas;
 		this.ctx = Raket.Canvas.ctx;
 		this.pattern = new Image();
+		this.spread = 4; //Distance between each line
 
 		this.terPoints = this.getTerrain(this.width, this.height, this.height/4, 0.6),
 		this.terPoints2 = this.getTerrain(this.width, this.height, this.height/4, 0.6, {s : this.terPoints[this.terPoints.length-1], e : 0});
@@ -40,6 +41,9 @@ Raket.Terrain = (function() {
 		*  a seed portion is added so we can seed the start and end section with values for scrolling
 		*/
 		TerrainClass.prototype.getTerrain = function(width, height, displace, roughness, seed) { 
+
+			width = width/this.spread;
+
 		    var points = [],
 		        // Gives us a power of 2 based on our width
 		        power = Math.pow(2, Math.ceil(Math.log(width) / (Math.log(2)))),
@@ -73,7 +77,7 @@ Raket.Terrain = (function() {
 		        displace *= roughness;
 		    }
 
-		    console.log(points);
+		    //console.log(points);
 		    return points;
 
 		}
@@ -82,7 +86,6 @@ Raket.Terrain = (function() {
 
 
 		TerrainClass.prototype.scrollTerrain = function() {
-
 			if(Raket.Spaceship.dead === true) {
 				return;
 			}
@@ -91,24 +94,28 @@ Raket.Terrain = (function() {
 			// in the window scope, we cant reference this. 
 			// We need to bind a that variable to the Raket.GameLoop
 			var that = Raket.Terrain,
-				ctx = that.ctx;
+				ctx = that.ctx,
+				spread = that.spread; //How much distance between each line
 
 		    ctx.clearRect(0, 0, that.width, that.height);
 		    that.offset -= 2;
 		    
 		    // draw the first half
 		    ctx.beginPath();
-		    ctx.moveTo(that.offset, that.terPoints[0]);
-		    for (var t = 0; t < that.terPoints.length; t++) {
-		        ctx.lineTo(t + that.offset, that.terPoints[t]);
-		    }
+		    ctx.moveTo(that.offset + spread, that.terPoints[0]);
 
+		    //Draw first array
+		    for (var t = 0; t < that.terPoints.length; t++) {
+				ctx.lineTo((t*spread) + that.offset, that.terPoints[t]);
+		    }
+		    //Draw second array
+		    
 		    for (t = 0; t < that.terPoints2.length; t++) {
-		        ctx.lineTo(that.width+that.offset + t, that.terPoints2[t]);
+		        ctx.lineTo(that.width + that.offset + (t*spread), that.terPoints2[t]);
 		    }
 		    
 		    // finish creating the rect so we can fill it
-		    ctx.lineTo(that.width + that.offset+t, that.canvas.height);
+		    ctx.lineTo(that.width + that.offset + (t*spread), that.canvas.height);
 		    ctx.lineTo(that.offset, that.canvas.height);
 		    ctx.closePath();
 		    ctx.fillStyle = this.pattern;
@@ -121,10 +128,10 @@ Raket.Terrain = (function() {
 		    * and gen a new set of points for terpoints 2
 		    */
 		    
-		    if(that.terPoints2.length-1 + that.width + that.offset <= that.width){
+		    if(that.terPoints2.length-1 + that.width + that.offset <= (that.width/spread)){
+		    
 		        that.terPoints = that.terPoints2;
 		        that.terPoints2 = that.getTerrain(that.width, that.height, that.height / 4, 0.6, {s : that.terPoints[that.terPoints.length-1], e : 0});
-		        
 		        that.offset = 0;
 		    }
 		    
