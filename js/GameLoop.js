@@ -7,7 +7,7 @@ Raket.GameLoop = (function() {
 
 	var LoopClass = function() {
 		//Game variables
-		this.fps = 60;
+		this.fps = 30;
 		this.now = 0;
 		this.then = Date.now();
 		this.interval = 1000/this.fps;
