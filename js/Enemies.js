@@ -11,22 +11,21 @@ Raket.Enemies = (function() {
 	 * The class responsible for controlling the enemies
 	 */
 	var EnemyControllClass = function() {
-
 	};
 
 	EnemyControllClass.prototype.createNew = function() {
 		
 		var args = {
 			x:Raket.Canvas.width + 20,
-			y: Math.floor(Math.random() * 200) + 1, //Set a number between 1-200
-			speed:3,
+			y: Math.floor(Math.random() * 300) + 1, //Set semi random y position
+			speed:5,
 			width:20,
 			height:20,
 			direction:'left'
 		};
 
+		//Create a new projectile instance and add it to the enemystore
 		var newEnemy = new Raket.Projectiles.getInstance(args);
-
 		EnemyStore.push(newEnemy);
 	}
 
@@ -40,9 +39,13 @@ Raket.Enemies = (function() {
 			var enemy = EnemyStore[i],
 				canvasWidth = Raket.Canvas.width;
 
+
+			//Report each enemies position with every update
+			Raket.CollisionControl.reportPosition(enemy);
+
 			//If the enemy is out of bounds, remove it. 
 			//Else move it 1 step forward
-			if(enemy.position.x > canvasWidth + enemy.width) {
+			if(enemy.position.x > canvasWidth + enemy.width || enemy.dead) {
 				EnemyStore.splice(i,1);
 			} else {
 				enemy.move();
@@ -57,6 +60,7 @@ Raket.Enemies = (function() {
 	EnemyControllClass.prototype.getAll = function() {
 		console.log('enemy store', EnemyStore);
 	}
+
 
 
 

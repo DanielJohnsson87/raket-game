@@ -57,6 +57,9 @@ Raket.GameLoop = (function() {
 
 				that.then = that.now - (that.delta % that.interval);
 
+				//Update the CollisionControl first, to flush all old positions before adding new.
+				Raket.CollisionControl.update();
+
 				Raket.Terrain.scrollTerrain();
 
 				Raket.Spaceship.update();

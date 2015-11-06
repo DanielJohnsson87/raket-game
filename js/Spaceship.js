@@ -20,17 +20,24 @@ Raket.Spaceship = (function() {
 		this.width = (typeof settings.width !== 'undefined') ? settings.width : 30;
 		this.height = (typeof settings.height !== 'undefined') ? settings.height : 15;
 		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 5;
-		this.isComputer = (typeof settings.isComputer === 'undefined' || settings.isComputer === false) ? false : true;
 		this.lastShot = Date.now();
 		this.dead = false;
 	};
 
+	/**
+	 * update
+	 * functions to run every animation frame
+	 * @return {[type]} [description]
+	 */
 	SpaceshipClass.prototype.update = function() {
+
+		//Report the spaceships position with every update
+		Raket.CollisionControl.reportPosition(this);
 
 		//Check if we're dead or if we just died in this iteration
 		if(this.dead || this.collisionCheck()) {
 			console.log('dead');
-			//this.die();
+			this.destroy();
 			return;
 		}
 
@@ -49,33 +56,27 @@ Raket.Spaceship = (function() {
 	SpaceshipClass.prototype.move = function() {
 
 
-		if(this.isComputer) {
+		//Left
+		if(Raket.Controls.keyMap[37] === true && this.position.x > 0) {
 			this.setPosition(-this.speed,0);
-		} else {
-			//Left
-			if(Raket.Controls.keyMap[37] === true && this.position.x > 0) {
-				this.setPosition(-this.speed,0);
-			} 
+		} 
+		//Up
+		if(Raket.Controls.keyMap[38] === true && this.position.y > 0) {
+			this.setPosition(0,-this.speed);
+		}
+		//Right
+		if(Raket.Controls.keyMap[39] === true && (this.position.x + this.width) < Raket.Canvas.width) {
+			this.setPosition(this.speed,0);
+		}
 
-			//Up
-			if(Raket.Controls.keyMap[38] === true && this.position.y > 0) {
-				this.setPosition(0,-this.speed);
-			}
-			//Right
-			if(Raket.Controls.keyMap[39] === true && (this.position.x + this.width) < Raket.Canvas.width) {
-				this.setPosition(this.speed,0);
-			}
+		//Down
+		if(Raket.Controls.keyMap[40] === true && (this.position.y + this.height) < Raket.Canvas.height) {
+			this.setPosition(0,this.speed);
+		}
 
-			//Down
-			if(Raket.Controls.keyMap[40] === true && (this.position.y + this.height) < Raket.Canvas.height) {
-				this.setPosition(0,this.speed);
-			}
-
-			//Spacebar
-			if(Raket.Controls.keyMap[32] === true) {
-				this.shoot();
-			}
-
+		//Spacebar
+		if(Raket.Controls.keyMap[32] === true) {
+			this.shoot();
 		}
 
 	
@@ -173,9 +174,9 @@ Raket.Spaceship = (function() {
 		 
 		if(timeSinceLastShot > 700) {
 			var args = {
-				x: this.position.x,
+				x: this.position.x + this.width + 5,
 				y: this.position.y,
-				speed: 5,
+				speed: 7,
 				width: 10,
 				height: 5,
 				direction: 'right'
@@ -186,7 +187,7 @@ Raket.Spaceship = (function() {
 	};
 
 
-	SpaceshipClass.prototype.die = function() {
+	SpaceshipClass.prototype.destroy = function() {
 		this.dead = true;
 	};
 

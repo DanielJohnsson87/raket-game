@@ -31,21 +31,7 @@ Raket.Projectiles = (function() {
 		this.direction = (!typeof args.direction !== 'undefined') ? args.direction : 'right';
 		this.width = (!typeof args.width !== 'undefined') ? args.width : 10;
 		this.height = (!typeof args.height !== 'undefined') ? args.height : 10;
-
-		/*
-		console.log('dir?', x,y,speed,width,height,direction);
-		this.canvas = Raket.Canvas.canvas;
-		this.ctx = Raket.Canvas.ctx;
-		this.position = {
-			x:x,
-			y:y
-		};
-		this.speed = (!typeof speed === 'undefined') ? speed : 5;
-		this.direction = (!typeof direction === 'undefined') ? direction : 'right';
-		this.width = (!typeof width === 'undefined') ? width : 10;
-		this.height = (!typeof height === 'undefined') ? height : 10;
-		*/
-
+		this.dead = false;
 	};
 
 
@@ -79,6 +65,13 @@ Raket.Projectiles = (function() {
 	};
 
 
+
+
+	ProjectileClass.prototype.destroy = function() {
+		this.dead = true;
+	};
+
+
 	/**
 	 * The class responsible for controlling the projectiles
 	 */
@@ -109,9 +102,12 @@ Raket.Projectiles = (function() {
 			var projectile = ProjectileStore[i],
 				canvasWidth = Raket.Canvas.width;
 
-			//If the projectile is out of bounds, remove it. 
+			//Report each projectiles position with every update
+			Raket.CollisionControl.reportPosition(projectile);
+
+			//If the projectile is out of bounds or has died, remove it. 
 			//Else move it 1 step forward
-			if(projectile.position.x > canvasWidth + projectile.width) {
+			if(projectile.position.x > canvasWidth + projectile.width || projectile.dead) {
 				ProjectileStore.splice(i,1);
 			} else {
 				projectile.move();
