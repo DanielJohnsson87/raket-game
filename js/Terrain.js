@@ -23,6 +23,9 @@ Raket.Terrain = (function() {
 	};
 
 
+
+
+
 	TerrainClass.prototype.setUpBackground = function() {
 		var that = this;
 			that.pattern.src = 'img/090611_moon___texture_by_avmorgan.jpg';
@@ -86,10 +89,6 @@ Raket.Terrain = (function() {
 
 
 		TerrainClass.prototype.scrollTerrain = function() {
-			if(Raket.Spaceship.dead === true) {
-				return;
-			}
-
 			// Since this function gets calles by requestAnimationFrame
 			// in the window scope, we cant reference this. 
 			// We need to bind a that variable to the Raket.GameLoop

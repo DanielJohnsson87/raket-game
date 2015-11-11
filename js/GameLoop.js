@@ -65,6 +65,7 @@ Raket.GameLoop = (function() {
 				Raket.Spaceship.update();
 				Raket.Enemies.update();
 				Raket.Projectiles.update();
+				Raket.GameControll.update();
 			}
 	};
 

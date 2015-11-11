@@ -32,6 +32,7 @@ Raket.Projectiles = (function() {
 		this.width = (!typeof args.width !== 'undefined') ? args.width : 10;
 		this.height = (!typeof args.height !== 'undefined') ? args.height : 10;
 		this.dead = false;
+		this.lastShot = 0;
 	};
 
 
@@ -64,7 +65,26 @@ Raket.Projectiles = (function() {
 
 	};
 
+	ProjectileClass.prototype.shoot = function() {
 
+		var newShot = Date.now(),
+			timeSinceLastShot = newShot - this.lastShot;
+		
+		 
+		if(timeSinceLastShot > 2000) {
+		
+			var args = {
+				x: this.position.x - this.width - 5,
+				y: this.position.y,
+				speed: 7,
+				width: 10,
+				height: 5,
+				direction: 'left'
+			};
+			Raket.Projectiles.createNew(args);
+			this.lastShot = newShot;
+		}
+	};
 
 
 	ProjectileClass.prototype.destroy = function() {
@@ -100,14 +120,26 @@ Raket.Projectiles = (function() {
 	ProjectileControllClass.prototype.update = function() {
 		for(var i = 0; i < ProjectileStore.length; i++) {
 			var projectile = ProjectileStore[i],
-				canvasWidth = Raket.Canvas.width;
+				canvasWidth = Raket.Canvas.width,
+				outOfBounds = false;
 
 			//Report each projectiles position with every update
 			Raket.CollisionControl.reportPosition(projectile);
+			
+			//Calculate if the projectile is out of bounds depending on its direction
+			switch(projectile.direction) {
+				case 'left':
+					outOfBounds = projectile.position.x < 0 - projectile.width ? true : false;
+					break;
+				case 'right':
+					outOfBounds = projectile.position.x  > Raket.Canvas.width + projectile.width ? true : false;
+					break;
+			}
+
 
 			//If the projectile is out of bounds or has died, remove it. 
 			//Else move it 1 step forward
-			if(projectile.position.x > canvasWidth + projectile.width || projectile.dead) {
+			if(outOfBounds || projectile.dead) {
 				ProjectileStore.splice(i,1);
 			} else {
 				projectile.move();
@@ -115,6 +147,7 @@ Raket.Projectiles = (function() {
 
 		}
 	}
+
 
 
 

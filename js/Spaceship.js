@@ -38,6 +38,7 @@ Raket.Spaceship = (function() {
 		if(this.dead || this.collisionCheck()) {
 			console.log('dead');
 			this.destroy();
+			Raket.GameLoop.halt();
 			return;
 		}
 

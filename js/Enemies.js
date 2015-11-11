@@ -35,6 +35,7 @@ Raket.Enemies = (function() {
 	 * @return {[type]} [description]
 	 */
 	EnemyControllClass.prototype.update = function() {
+		var nrOfEnemies = Raket.GameControll.level;
 		for(var i = 0; i < EnemyStore.length; i++) {
 			var enemy = EnemyStore[i],
 				canvasWidth = Raket.Canvas.width;
@@ -45,15 +46,21 @@ Raket.Enemies = (function() {
 
 			//If the enemy is out of bounds, remove it. 
 			//Else move it 1 step forward
-			if(enemy.position.x > canvasWidth + enemy.width || enemy.dead) {
+			if(enemy.position.x <  -enemy.width || enemy.dead) {
 				EnemyStore.splice(i,1);
 			} else {
 				enemy.move();
+				enemy.shoot();
 			}
-
 		}
-	}
 
+
+		if(EnemyStore.length < nrOfEnemies) {
+			console.log('new');
+			this.createNew();
+		}
+
+	}
 
 
 
