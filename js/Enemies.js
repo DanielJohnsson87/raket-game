@@ -19,7 +19,8 @@ Raket.Enemies = (function() {
 			speed:5,
 			width:20,
 			height:20,
-			direction:'left'
+			direction:'left',
+			type: 'enemy'
 		};
 
 		//Create a new projectile instance and add it to the enemystore
@@ -44,9 +45,7 @@ Raket.Enemies = (function() {
 			if(enemy.position.x <  -enemy.width || enemy.dead) {
 				EnemyStore.splice(i,1);
 			} else {
-
 				var moveY = flightData.pxToGround < 30 ? -enemy.speed : 0;
-
 				enemy.move(0,moveY);
 				enemy.shoot();
 			}

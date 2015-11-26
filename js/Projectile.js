@@ -13,7 +13,8 @@ Raket.Projectiles = (function() {
 	 *    	speed = int
 	 *     	width = int 
 	 *      height = int
-	 *      direction = string | 'left', 'rigth', 'up', 'down'
+	 *      direction = string | 'left', 'rigth', 'up', 'down',
+	 *      type = string 'enemy' || 'projectile'
 	 * }
 	 * 
 	 */
@@ -29,6 +30,7 @@ Raket.Projectiles = (function() {
 		this.direction = (!typeof args.direction !== 'undefined') ? args.direction : 'right';
 		this.width = (!typeof args.width !== 'undefined') ? args.width : 10;
 		this.height = (!typeof args.height !== 'undefined') ? args.height : 10;
+		this.type = (!typeof args.type !== 'undefined') ? args.type : 'projectile';
 		this.dead = false;
 		this.lastShot = 0;
 	};
