@@ -1,7 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
+var Raket = Raket || {};
 Raket.Enemies = (function() {
 
 	var EnemyStore = [];
@@ -38,18 +36,18 @@ Raket.Enemies = (function() {
 		var nrOfEnemies = Raket.GameControll.level;
 		for(var i = 0; i < EnemyStore.length; i++) {
 			var enemy = EnemyStore[i],
-				canvasWidth = Raket.Canvas.width;
-
-
-			//Report each enemies position with every update
-			Raket.CollisionControl.reportPosition(enemy);
+				canvasWidth = Raket.Canvas.width,
+				flightData = Raket.CollisionControl.reportPosition(enemy); //Report each enemies position with every update
 
 			//If the enemy is out of bounds, remove it. 
 			//Else move it 1 step forward
 			if(enemy.position.x <  -enemy.width || enemy.dead) {
 				EnemyStore.splice(i,1);
 			} else {
-				enemy.move();
+
+				var moveY = flightData.pxToGround < 30 ? -enemy.speed : 0;
+
+				enemy.move(0,moveY);
 				enemy.shoot();
 			}
 		}

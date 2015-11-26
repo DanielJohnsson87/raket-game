@@ -1,7 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
+var Raket = Raket || {};
 Raket.Spaceship = (function() {
 
 	var SpaceshipClass = function(settings) {

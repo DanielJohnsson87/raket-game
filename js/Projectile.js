@@ -1,7 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
+var Raket = Raket || {};
 Raket.Projectiles = (function() {
 
 	//Store all projectiles here
@@ -37,11 +35,17 @@ Raket.Projectiles = (function() {
 
 
 	/**
-	 * Move the spaceship depending on what keys are pressed
+	 * Move the spaceship depending on direction it has
 	 */
-	ProjectileClass.prototype.move = function() {
+	ProjectileClass.prototype.move = function(x,y) {
 
+		//If x or y coordinates are provided, add them to the current pos.
+		var xMove = typeof x === 'undefined' ? 0 : x,
+		 	yMove = typeof y === 'undefined' ? 0 : y;
+		 	this.position.x += xMove;
+		 	this.position.y += yMove;
 
+		//Move the projectile in it's natural direction
 		switch(this.direction) {
 			case 'left':
 				this.position.x = this.position.x - this.speed;

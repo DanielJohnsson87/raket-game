@@ -1,8 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
-
+var Raket = Raket || {};
 Raket.Canvas = (function() {
 	var CanvasClass = function() {
 		this.height = 512;

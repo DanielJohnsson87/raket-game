@@ -1,8 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
-
+var Raket = Raket || {};
 Raket.GameLoop = (function() {
 
 	var LoopClass = function() {

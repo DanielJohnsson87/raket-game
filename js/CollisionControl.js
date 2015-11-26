@@ -1,7 +1,5 @@
 'use strict';
-if(typeof Raket === 'undefined') {
-	var Raket = {};
-}
+var Raket = Raket || {};
 Raket.CollisionControl = (function() {
 
 	var objectStore = {};
@@ -19,13 +17,14 @@ Raket.CollisionControl = (function() {
 	 */
 	CollisionClass.prototype.reportPosition = function(obj) {
 		if(typeof obj.position === 'undefined') {
-			return;
+			return false;
 		}
 
+		var groundProximity = this.getGroundProx(obj);
 
-		if(this.groundCollision(obj)) {
+		if(groundProximity.collision) {
 			obj.destroy();
-			return;
+			return groundProximity;
 		}
 
 		//Loop the width of the object to get all X coordinates of the object
@@ -51,11 +50,15 @@ Raket.CollisionControl = (function() {
 
 		}
 
+
+		//Return the groundProximity object to enable the object to change their trajectory
+		return groundProximity;
+
 	};
 
 
 
-	CollisionClass.prototype.groundCollision = function(obj) {
+	CollisionClass.prototype.getGroundProx = function(obj) {
 		var terrainOffset = (Raket.Terrain.offset === 0) ? 0 : -Raket.Terrain.offset,
 			canvasWidth = Raket.Canvas.width,
 
@@ -69,8 +72,10 @@ Raket.CollisionControl = (function() {
 
 			spread = Raket.Terrain.spread,
 
-
-			collision = false;
+			res = {
+				collision: false,
+				pxToGround: false
+			};
 
 			//console.log((sPosX + terrainOffset));
 			var terrain = false;
@@ -105,17 +110,26 @@ Raket.CollisionControl = (function() {
 
 			//Check all terrainpoints agains our current position.
 			for(var i = 0; i < terrain.length; i++) {
+				
+				//Set nr of PX left to the ground
+				if(res.pxToGround > (terrain[i] - sBottom) || res.pxToGround === false) {
+					res.pxToGround = terrain[i] - sBottom;
+				} 
+			
+
 				//If we touch a edge. Die! 
 				if(sBottom >= terrain[i]) {
 					console.log('dead', sBottom, terrain[i]);
-
-					collision = true;
+					res.collision = true;
 					break;
 				}
 			}
 
+			if(res.pxToGround === false) {
+				console.log('false',res);
+			}
 
-			return collision;
+			return res;
 
 	}
 
