@@ -125,10 +125,6 @@ Raket.CollisionControl = (function() {
 				}
 			}
 
-			if(res.pxToGround === false) {
-				console.log('false',res);
-			}
-
 			return res;
 
 	}

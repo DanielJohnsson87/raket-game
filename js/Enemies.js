@@ -31,7 +31,6 @@ Raket.Enemies = (function() {
 	/**
 	 * Move all enemies by their speed.
 	 * Remove them when they are out of bounds
-	 * @return {[type]} [description]
 	 */
 	EnemyControllClass.prototype.update = function() {
 		var nrOfEnemies = Raket.GameControll.level;
@@ -40,11 +39,18 @@ Raket.Enemies = (function() {
 				canvasWidth = Raket.Canvas.width,
 				flightData = Raket.CollisionControl.reportPosition(enemy); //Report each enemies position with every update
 
-			//If the enemy is out of bounds, remove it. 
-			//Else move it 1 step forward
-			if(enemy.position.x <  -enemy.width || enemy.dead) {
+			//If the enemy is out of bounds, remove it and tell GameControll that a enemy survided. 
+			if(enemy.position.x <  -enemy.width) {
+				Raket.GameControll.enemyMissed();
 				EnemyStore.splice(i,1);
-			} else {
+			} 
+			//If the enemy is dead, it has been killed. Tell GameControll and remove it
+			else if(enemy.dead) {
+				Raket.GameControll.enemyKilled();
+				EnemyStore.splice(i,1);
+			} 
+			//Else it's alive. Move the enemy forward and try tro fire
+			else {
 				var moveY = flightData.pxToGround < 30 ? -enemy.speed : 0;
 				enemy.move(0,moveY);
 				enemy.shoot();

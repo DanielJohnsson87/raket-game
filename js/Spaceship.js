@@ -17,7 +17,7 @@ Raket.Spaceship = (function() {
 		};
 		this.width = (typeof settings.width !== 'undefined') ? settings.width : 30;
 		this.height = (typeof settings.height !== 'undefined') ? settings.height : 15;
-		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 5;
+		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 7;
 		this.lastShot = Date.now();
 		this.dead = false;
 	};
@@ -173,9 +173,9 @@ Raket.Spaceship = (function() {
 		 
 		if(timeSinceLastShot > 700) {
 			var args = {
-				x: this.position.x + this.width + 5,
+				x: this.position.x + this.width + this.speed+2,
 				y: this.position.y,
-				speed: 7,
+				speed: this.speed+2,
 				width: 10,
 				height: 5,
 				direction: 'right'
