@@ -37,7 +37,7 @@ Raket.GameControll = (function() {
 	 */
 	GameControll.prototype.enemyKilled = function() {
 		this.enemiesKilled++;
-		this.calcScore(1);
+		this.calcScore(10);
 	};
 
 	/**
@@ -45,7 +45,7 @@ Raket.GameControll = (function() {
 	 */
 	GameControll.prototype.enemyMissed = function() {
 		this.enemiesMissed++;
-		this.calcScore(-1);
+		this.calcScore(-10);
 	};
 
 	GameControll.prototype.calcScore = function(value) {
