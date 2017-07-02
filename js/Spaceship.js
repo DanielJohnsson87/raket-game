@@ -11,15 +11,19 @@ Raket.Spaceship = (function() {
 
 		this.canvas = Raket.Canvas.canvas;
 		this.ctx = Raket.Canvas.ctx;
+		this.backgroundImage = null;
 		this.position = {
 			x: (typeof settings.x !== 'undefined') ? settings.x : 0,
 			y: (typeof settings.y !== 'undefined') ? settings.y : 0
 		};
 		this.width = (typeof settings.width !== 'undefined') ? settings.width : 30;
-		this.height = (typeof settings.height !== 'undefined') ? settings.height : 15;
+		this.height = (typeof settings.height !== 'undefined') ? settings.height : 30;
 		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 7;
 		this.lastShot = Date.now();
 		this.dead = false;
+
+		this.setBackground();
+
 	};
 
 	/**
@@ -39,6 +43,12 @@ Raket.Spaceship = (function() {
 			Raket.GameLoop.halt();
 			return;
 		}
+
+        if(null !== this.backgroundImage) {
+            this.ctx.drawImage(this.backgroundImage, this.position.x, this.position.y, this.width, this.height);
+        } else {
+            this.setBackground();
+        }
 
 		//Move the spaceship
 		this.move();
@@ -78,11 +88,19 @@ Raket.Spaceship = (function() {
 			this.shoot();
 		}
 
-	
-		this.ctx.rect(this.position.x, this.position.y, this.width, this.height);
-		this.ctx.fill();
 
 	};
+
+	SpaceshipClass.prototype.setBackground = function () {
+        var blueprint_background = new Image(),
+			that = this;
+        blueprint_background.src = 'img/spaceship.png';
+
+        console.log(that.position.x,that.position.y);
+        blueprint_background.onload = function(){
+        	that.backgroundImage = this;
+        };
+    };
 
 
 	SpaceshipClass.prototype.collisionCheck = function() {
@@ -135,7 +153,7 @@ Raket.Spaceship = (function() {
 
 			//Check all terrainpoints agains our current position.
 			for(var i = 0; i < terrain.length; i++) {
-				//If we touch a edge. Die! 
+				//If we touch an edge. Die!
 				if(sBottom >= terrain[i]) {
 					console.log('dead', sBottom, terrain[i]);
 
@@ -171,7 +189,7 @@ Raket.Spaceship = (function() {
 			timeSinceLastShot = newShot - this.lastShot;
 		
 		 
-		if(timeSinceLastShot > 700) {
+		if(timeSinceLastShot > 500) {
 			var args = {
 				x: this.position.x + this.width + this.speed+2,
 				y: this.position.y,

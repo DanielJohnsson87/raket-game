@@ -33,6 +33,7 @@ Raket.Projectiles = (function() {
 		this.type = (!typeof args.type !== 'undefined') ? args.type : 'projectile';
 		this.dead = false;
 		this.lastShot = 0;
+		this.backgroundImage = null;
 	};
 
 
@@ -66,8 +67,18 @@ Raket.Projectiles = (function() {
 				break;
 		}
 
-		this.ctx.rect(this.position.x, this.position.y, this.width, this.height);
-		this.ctx.fill();
+
+		if('enemy' === this.type) {
+            if(null !== this.backgroundImage) {
+                this.ctx.drawImage(this.backgroundImage, this.position.x, this.position.y, this.width, this.height);
+            } else {
+                this.setBackground();
+            }
+		} else {
+            this.ctx.rect(this.position.x, this.position.y, this.width, this.height);
+            this.ctx.fill();
+		}
+
 
 	};
 
@@ -91,6 +102,16 @@ Raket.Projectiles = (function() {
 			this.lastShot = newShot;
 		}
 	};
+
+    ProjectileClass.prototype.setBackground = function () {
+        var blueprint_background = new Image(),
+            that = this;
+        blueprint_background.src = 'img/enemy.png';
+
+        blueprint_background.onload = function(){
+            that.backgroundImage = this;
+        };
+    };
 
 
 	ProjectileClass.prototype.destroy = function() {

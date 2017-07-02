@@ -45,11 +45,11 @@ Raket.GameControll = (function() {
 	 */
 	GameControll.prototype.enemyMissed = function() {
 		this.enemiesMissed++;
-		this.calcScore(-10);
+		// this.calcScore(-10);
 	};
 
 	GameControll.prototype.calcScore = function(value) {
-		console.log('calc', value, this.score, this.level);
+		// console.log('calc', value, this.score, this.level);
 		this.score = this.score + (this.level * value);
 		scoreElement.innerHTML = this.score;
 	};

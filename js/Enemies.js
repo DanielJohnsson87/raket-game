@@ -17,8 +17,8 @@ Raket.Enemies = (function() {
 			x:Raket.Canvas.width + 20,
 			y: Math.floor(Math.random() * 300) + 1, //Set semi random y position
 			speed:5,
-			width:20,
-			height:20,
+			width:40,
+			height:40,
 			direction:'left',
 			type: 'enemy'
 		};
@@ -26,7 +26,9 @@ Raket.Enemies = (function() {
 		//Create a new projectile instance and add it to the enemystore
 		var newEnemy = new Raket.Projectiles.getInstance(args);
 		EnemyStore.push(newEnemy);
-	}
+
+	};
+
 
 	/**
 	 * Move all enemies by their speed.

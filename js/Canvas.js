@@ -10,6 +10,8 @@ Raket.Canvas = (function() {
 
 		this.canvas.height = this.height;
 		this.canvas.width = this.width;
+
+		this.canvas.style.background = '#000';
 	};
 
 

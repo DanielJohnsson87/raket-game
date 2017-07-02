@@ -16,7 +16,7 @@ Raket.Terrain = (function() {
 		this.terPoints = this.getTerrain(this.width, this.height, this.height/4, 0.6),
 		this.terPoints2 = this.getTerrain(this.width, this.height, this.height/4, 0.6, {s : this.terPoints[this.terPoints.length-1], e : 0});
 
-		//this.setUpBackground();
+		// this.setUpBackground();
 
 	};
 
@@ -25,13 +25,15 @@ Raket.Terrain = (function() {
 
 
 	TerrainClass.prototype.setUpBackground = function() {
-		var that = this;
-			that.pattern.src = 'img/090611_moon___texture_by_avmorgan.jpg';
 
-		that.pattern.onload = function() {
-			var pattern = that.ctx.createPattern(this, "repeat");
-			that.ctx.fillStyle = pattern;
-		};
+        this.ctx.fillRect(0, 0, this.width, this.height);
+		// var that = this;
+		// 	that.pattern.src = 'img/090611_moon___texture_by_avmorgan.jpg';
+        //
+		// that.pattern.onload = function() {
+		// 	var pattern = that.ctx.createPattern(this, "repeat");
+		// 	that.ctx.fillStyle = pattern;
+		// };
 
 	}
 
@@ -115,7 +117,9 @@ Raket.Terrain = (function() {
 		    ctx.lineTo(that.width + that.offset + (t*spread), that.canvas.height);
 		    ctx.lineTo(that.offset, that.canvas.height);
 		    ctx.closePath();
-		    ctx.fillStyle = this.pattern;
+		    ctx.fillStyle = 'rgb(156, 156, 156)';
+            // ctx.fillStyle = this.pattern;
+            ctx.strokeStyle = 'red';
 		    ctx.fill();
 
 		    
