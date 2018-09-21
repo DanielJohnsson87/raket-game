@@ -1,6 +1,6 @@
 'use strict'
 var Raket = Raket || {}
-Raket.Spaceship = (function () {
+Raket.BuddySpaceship = (function () {
 
   var SpaceshipClass = function (settings) {
 
@@ -13,8 +13,8 @@ Raket.Spaceship = (function () {
     this.ctx = Raket.Canvas.ctx
     this.backgroundImage = null
     this.position = {
-      x: (typeof settings.x !== 'undefined') ? settings.x : 100,
-      y: (typeof settings.y !== 'undefined') ? settings.y : 200
+      x: (typeof settings.x !== 'undefined') ? settings.x : 0,
+      y: (typeof settings.y !== 'undefined') ? settings.y : 0
     }
     this.width = (typeof settings.width !== 'undefined') ? settings.width : 30
     this.height = (typeof settings.height !== 'undefined') ? settings.height : 30
@@ -168,6 +168,7 @@ Raket.Spaceship = (function () {
    */
   SpaceshipClass.prototype.setPosition = function (x, y) {
 
+    console.log('set!', x, y)
     this.position = {
       x: this.position.x + x,
       y: this.position.y + y

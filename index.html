@@ -11,10 +11,29 @@
 <input type="button" onclick="document.location.reload()" value="Restart">
 
 
+Status: <span id="status"></span><br />
+URL: <input id="url" /><br />
+<input id="open" type="button" value="Connect" />&nbsp;
+<input id="close" type="button" value="Disconnect" /><br />
+<input id="send" type="button" value="Send" />&nbsp;
+<input id="text" /><br />
+<span id="message"></span>
 
+
+
+<!--<script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>-->
+
+<!--<script>-->
+
+  <!--const socket = io('http://10.0.1.26:5000');-->
+
+<!--</script>-->
+
+<script type="text/javascript" src="js/Socket.js"></script>
 <script type="text/javascript" src="js/Canvas.js"></script>
 <script type="text/javascript" src="js/GameLoop.js"></script>
 <script type="text/javascript" src="js/Spaceship.js"></script>
+<script type="text/javascript" src="js/BuddySpaceship.js"></script>
 <script type="text/javascript" src="js/Terrain.js"></script>
 <script type="text/javascript" src="js/Controls.js"></script>
 <script type="text/javascript" src="js/Projectile.js"></script>
