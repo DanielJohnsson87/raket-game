@@ -18,7 +18,7 @@ Raket.Spaceship = (function() {
 		};
 		this.width = (typeof settings.width !== 'undefined') ? settings.width : 30;
 		this.height = (typeof settings.height !== 'undefined') ? settings.height : 30;
-		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 7;
+		this.speed = (typeof settings.speed !== 'undefined') ? settings.speed : 4;
 		this.lastShot = Date.now();
 		this.dead = false;
 
@@ -68,7 +68,7 @@ Raket.Spaceship = (function() {
 		//Left
 		if(Raket.Controls.keyMap[37] === true && this.position.x > 0) {
 			this.setPosition(-this.speed,0);
-		} 
+		}
 		//Up
 		if(Raket.Controls.keyMap[38] === true && this.position.y > 0) {
 			this.setPosition(0,-this.speed);
@@ -122,21 +122,21 @@ Raket.Spaceship = (function() {
 
 			//console.log((sPosX + terrainOffset));
 			var terrain = false;
-			// If our right position + the current terrain offset is 
-			// bigger then or eaqual to our canvas width our 
+			// If our right position + the current terrain offset is
+			// bigger then or eaqual to our canvas width our
 			// spaceship is still in the first terrain array
 			// This isn't ideal. Since we the sLeft part of the spaceship
 			// could still be in the first array when sRight is in the second.
 			if((sRight + terrainOffset) <= canvasWidth) {
 
-				// The X coordinate + the current terrainOffset gives divided by the spread (distance between lines) 
+				// The X coordinate + the current terrainOffset gives divided by the spread (distance between lines)
 				// gives us the first array key to start checking agains.
 				var key = Math.round((sPosX+ terrainOffset) / spread);
 
 				//Get all terrain points from the spaceships X start pos and the entire width of the spaceship
 				//The width of the spaceship must be divided by the spread to make shure we get the right amount of points
 				terrain = Raket.Terrain.terPoints.slice(key, key + (Raket.Spaceship.width/spread));
-			} 
+			}
 
 			// Else we should be in the second terrain array
 			else {
@@ -144,12 +144,12 @@ Raket.Spaceship = (function() {
 				//  gives us the first array key to start checking agains.
 				var key = Math.round((sPosX+ terrainOffset - canvasWidth) / spread),
 					nrToGet = key + Math.round(Raket.Spaceship.width/spread);
-					
+
 				//Get terrain points
 				terrain = Raket.Terrain.terPoints2.slice(key,nrToGet);
 
 			}
-				
+
 
 			//Check all terrainpoints agains our current position.
 			for(var i = 0; i < terrain.length; i++) {
@@ -166,7 +166,7 @@ Raket.Spaceship = (function() {
 			return collision;
 
 	}
- 
+
 
 	/**
 	 * Set new coordinates for the spaceship Without moving it.
@@ -187,8 +187,8 @@ Raket.Spaceship = (function() {
 
 		var newShot = Date.now(),
 			timeSinceLastShot = newShot - this.lastShot;
-		
-		 
+
+
 		if(timeSinceLastShot > 500) {
 			var args = {
 				x: this.position.x + this.width + this.speed+2,
