@@ -10,7 +10,7 @@ window.addEventListener("load", function(event) {
   var socket;
 
   status.textContent = "Not Connected";
-  url.value = "ws://10.0.1.17:1111?user_id=" + Math.round(Math.random(1,10000)*1000);
+  url.value = "ws://192.168.1.135:1111?user_id=" + Math.round(Math.random(1,10000)*1000);
   close.disabled = true;
   send.disabled = true;
 

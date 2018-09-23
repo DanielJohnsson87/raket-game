@@ -63,7 +63,7 @@ Raket.GameLoop = (function () {
 
       if (Raket.BuddyPos) {
         console.log('update buddy pos')
-        Raket.BuddySpaceship.setPosition(Raket.BuddyPos.position)
+        Raket.BuddySpaceship.setPosition(Raket.BuddyPos.position.x, Raket.BuddyPos.position.y)
         Raket.BuddySpaceship.update()
       }
 
