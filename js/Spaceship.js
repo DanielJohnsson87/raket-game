@@ -94,7 +94,6 @@ Raket.Spaceship = (function () {
       that = this
     blueprint_background.src = 'img/spaceship.png'
 
-    console.log(that.position.x, that.position.y)
     blueprint_background.onload = function () {
       that.backgroundImage = this
     }

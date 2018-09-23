@@ -94,7 +94,7 @@ Raket.BuddySpaceship = (function () {
       that = this
     blueprint_background.src = 'img/spaceship.png'
 
-    console.log(that.position.x, that.position.y)
+    console.log('set bg', that.position.x, that.position.y)
     blueprint_background.onload = function () {
       that.backgroundImage = this
     }
@@ -167,11 +167,9 @@ Raket.BuddySpaceship = (function () {
    * @param {[type]} y [number to move the y coordinate by]
    */
   SpaceshipClass.prototype.setPosition = function (x, y) {
-
-    console.log('set!', x, y)
     this.position = {
-      x: this.position.x + x,
-      y: this.position.y + y
+      x: x,
+      y: y
     }
 
   }

@@ -27,8 +27,19 @@ window.addEventListener("load", function(event) {
 
     // Display messages received from the server
     window.gameSocket.addEventListener("message", function(event) {
+      const message = JSON.parse(event.data);
+      const is_terrain = message.type && message.type === 'terrain'
+      console.log(message)
+      if(is_terrain) {
+        window.Raket.Terrain.setTerrain(message.message)
+      } else {
+        console.log('else')
+          window.Raket.BuddyPos = JSON.parse(message)
+      }
+
       message.textContent = "Server Says: " + event.data;
-      window.Raket.BuddyPos = JSON.parse(event.data)
+
+
     });
 
     // Display any errors that occur

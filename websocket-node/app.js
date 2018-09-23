@@ -2,6 +2,7 @@
 var WebSocketServer = require('websocket').server
 var http = require('http')
 var exec = require('child_process').exec
+var terrain = require('./parts/Terrain')
 
 var server = http.createServer(function (request, response) {
     console.log((new Date()) + ' Received request for ' + request.url)
@@ -40,52 +41,109 @@ var clients = []
 
 wsServer.on('request', function (request) {
     if (!originIsAllowed(request.origin)) {
-        // Make sure we only accept requests from an allowed origin
-        request.reject()
-        console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.')
+        rejectConnection(request)
         return
     }
-    var connection = request.accept('echo-protocol', request.origin)
-    console.log((new Date()) + ' Connection accepted.')
-    // console.log(request)
-    // console.log('id', request.resourceURL.query.user_id)
-    var userID = request.resourceURL.query.user_id
 
-    // clients.push(connection)
-    clients[userID] = connection
+    var connection = acceptConnection(request)
+    var clientID = getClientID(request)
+    clients[clientID] = connection
+    sendTerrain()
 
-    connection.on('message', function (message) {
+    connection.on('message', handleMessage(clientID))
+    connection.on('close', handleConnectionClose)
+})
+
+/**
+ *
+ */
+function sendTerrain() {
+    const payload = JSON.stringify({
+        type: 'terrain',
+        message: terrain
+    });
+    sendToAll(payload)
+}
+
+
+/**
+ *
+ * @param request
+ * @returns {*}
+ */
+function rejectConnection(request) {
+    request.reject()
+    console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.')
+    return request
+}
+
+/**
+ *
+ * @param request
+ * @returns {*}
+ */
+function acceptConnection(request) {
+    console.log((new Date()) + ' Connection accepted')
+    return request.accept('echo-protocol', request.origin)
+}
+
+/**
+ *
+ * @param request
+ * @returns {*}
+ */
+function getClientID(request) {
+    return request.resourceURL.query.user_id
+}
+
+/**
+ *
+ * @param reasonCode
+ * @param description
+ */
+function handleConnectionClose(reasonCode, description) {
+    // console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
+    console.log((new Date()) + ' Peer disconnected.')
+    //Todo: Remove item from client's array
+}
+
+
+/**
+ *
+ * @param message
+ */
+function handleMessage(userID) {
+    console.log('userid', userID)
+    return function (message) {
+        console.log('message', message)
         if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data)
-            console.log('USER ID', userID)
-
+            console.log('SEND')
             sendToAllExcept(message.utf8Data, userID)
-
         }
         else if (message.type === 'binary') {
             console.log('Received Binary Message of ' + message.binaryData.length + ' bytes')
-            connection.sendBytes(message.binaryData)
+            // connection.sendBytes(message.binaryData)
         }
-    })
+    }
+}
 
-    connection.on('close', function (reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
-    })
-})
 
+/**
+ *
+ * @param message
+ * @param ignoreUserID
+ */
 function sendToAllExcept(message, ignoreUserID) {
-
     clients.forEach(function (client, index) {
         console.log(ignoreUserID, index, ignoreUserID != index)
         if (ignoreUserID != index) {
             client.sendUTF(message)
         }
     })
+}
 
-
-    // for (var j = 0; j < clients.length; j++) {
-    //   clients[j].sendUTF(message)
-    //   // if (dontSendToID !== currentID) {
-    //   // }
-    // }
+function sendToAll(message) {
+    clients.forEach(function (client, index) {
+        client.sendUTF(message)
+    })
 }
