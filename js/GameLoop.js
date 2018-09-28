@@ -2,92 +2,96 @@
 var Raket = Raket || {}
 Raket.GameLoop = (function () {
 
-    var LoopClass = function () {
-        //Game variables
-        this.fps = 60
-        this.now = 0
-        this.then = Date.now()
-        this.interval = 1000 / this.fps
-        this.delta = 0
-        this.stop = false
+  var LoopClass = function () {
+    //Game variables
+    this.fps = 60
+    this.now = 0
+    this.then = Date.now()
+    this.interval = 1000 / this.fps
+    this.delta = 0
+    this.stop = false
+  }
+
+  /**
+   * Draws everything to the canvas
+   * @return {[type]} [description]
+   */
+  LoopClass.prototype.draw = function () {
+
+
+    // Since this function gets calles by requestAnimationFrame
+    // in the window scope, we cant reference this.
+    // We need to bind a that variable to the Raket.GameLoop
+    var that = Raket.GameLoop
+
+    if (that.stop === true) {
+      return
     }
 
-    /**
-     * Draws everything to the canvas
-     * @return {[type]} [description]
-     */
-    LoopClass.prototype.draw = function () {
+    requestAnimationFrame(Raket.GameLoop.draw)
 
+    that.now = Date.now()
+    that.delta = that.now - that.then
 
-        // Since this function gets calles by requestAnimationFrame
-        // in the window scope, we cant reference this.
-        // We need to bind a that variable to the Raket.GameLoop
-        var that = Raket.GameLoop
+    if (that.delta > that.interval) {
+      // update time stuffs
 
-        if (that.stop === true) {
-            return
-        }
+      // Just `then = now` is not enough.
+      // Lets say we set fps at 10 which mean
+      // each frame must take 100ms
+      // Now frame executes in 16ms (60fps) so
+      // the loop iterates 7 times (16*7 = 112ms) until
+      // delta > interval === true
+      // Eventually this lowers down the FPS as
+      // 112*10 = 1120ms (NOT 1000ms).
+      // So we have to get rid of that extra 12ms
+      // by subtracting delta (112) % interval (100).
+      // Hope that makes sense.
 
-        requestAnimationFrame(Raket.GameLoop.draw)
+      that.then = that.now - (that.delta % that.interval)
 
-        that.now = Date.now()
-        that.delta = that.now - that.then
+      //Update the CollisionControl first, to flush all old positions before adding new.
 
-        if (that.delta > that.interval) {
-            // update time stuffs
+      // Raket.CollisionControl.update();
 
-            // Just `then = now` is not enough.
-            // Lets say we set fps at 10 which mean
-            // each frame must take 100ms
-            // Now frame executes in 16ms (60fps) so
-            // the loop iterates 7 times (16*7 = 112ms) until
-            // delta > interval === true
-            // Eventually this lowers down the FPS as
-            // 112*10 = 1120ms (NOT 1000ms).
-            // So we have to get rid of that extra 12ms
-            // by subtracting delta (112) % interval (100).
-            // Hope that makes sense.
+      Raket.Terrain.scrollTerrain()
 
-            that.then = that.now - (that.delta % that.interval)
+      Raket.Spaceship.update()
+      // Raket.Enemies.update();
+      // Raket.Projectiles.update();
 
-            //Update the CollisionControl first, to flush all old positions before adding new.
+      if (Raket.BuddyPos) {
+        Raket.BuddySpaceship.setPosition(Raket.BuddyPos.position.x, Raket.BuddyPos.position.y)
+        Raket.BuddySpaceship.update()
+      }
 
-            // Raket.CollisionControl.update();
+      var message = {
+        'type': 'position',
+        'message': Raket.Spaceship
+      }
 
-            Raket.Terrain.scrollTerrain();
+      window.gameSocket.send(JSON.stringify(message))
 
-            Raket.Spaceship.update()
-            // Raket.Enemies.update();
-            // Raket.Projectiles.update();
+      Raket.GameControll.update()
 
+      // Raket.GameLoop.halt()
 
-            if (Raket.BuddyPos) {
-                Raket.BuddySpaceship.setPosition(Raket.BuddyPos.position.x, Raket.BuddyPos.position.y)
-                Raket.BuddySpaceship.update()
-            }
-
-            window.gameSocket.send(JSON.stringify(Raket.Spaceship))
-
-
-            Raket.GameControll.update()
-
-
-            // window.gameSocket.addEventListener('message', function (event) {
-            // console.log('Server said', event);
-            // })
-        }
+      // window.gameSocket.addEventListener('message', function (event) {
+      // console.log('Server said', event);
+      // })
     }
+  }
 
-    LoopClass.prototype.halt = function () {
-        Raket.GameLoop.stop = true
-    }
+  LoopClass.prototype.halt = function () {
+    Raket.GameLoop.stop = true
+  }
 
-    LoopClass.prototype.go = function () {
-        Raket.GameLoop.stop = false
-        Raket.GameLoop.draw()
-    }
+  LoopClass.prototype.go = function () {
+    Raket.GameLoop.stop = false
+    Raket.GameLoop.draw()
+  }
 
-    var loop = new LoopClass()
-    return loop
+  var loop = new LoopClass()
+  return loop
 
 })()

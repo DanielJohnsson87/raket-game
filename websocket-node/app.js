@@ -117,8 +117,12 @@ function handleMessage(userID) {
     return function (message) {
         console.log('message', message)
         if (message.type === 'utf8') {
-            console.log('SEND')
-            sendToAllExcept(message.utf8Data, userID)
+
+
+            if(message.utf8Data.type === 'position') {
+              sendToAllExcept(message.utf8Data, userID)
+            }
+
         }
         else if (message.type === 'binary') {
             console.log('Received Binary Message of ' + message.binaryData.length + ' bytes')

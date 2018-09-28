@@ -9,24 +9,25 @@ Raket.Controls = (function () {
 
 
 
-    ControlClass.prototype.keyboardEvents = function () {
-
-        var that = this;
-
-        document.onkeydown = document.onkeyup = function (e) {
-            e = e || event; // to deal with IE
-
-            //On keyup and keydown
-            if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40 || e.keyCode === 32) {
-                e.preventDefault();
-                console.log('jep', e.keyCode)
-                that.keyMap[e.keyCode] = (e.type == 'keydown');
-            }
-        }
-    }
+    // ControlClass.prototype.keyboardEvents = function () {
+    //
+    //     var that = this;
+    //
+    //     document.onkeydown = document.onkeyup = function (e) {
+    //         e = e || event; // to deal with IE
+    //
+    //         //On keyup and keydown
+    //         if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40 || e.keyCode === 32) {
+    //             e.preventDefault();
+    //             console.log('jep', e.keyCode)
+    //             that.keyMap[e.keyCode] = (e.type == 'keydown');
+    //         }
+    //     }
+    // }
     ControlClass.prototype.pollGamepads = function (interval) {
         var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : [])
-        for (var i = 0; i < gamepads.length; i++) {
+      console.log('poll', gamepads)
+      for (var i = 0; i < gamepads.length; i++) {
             var gp = gamepads[i]
             if (gp) {
                 console.log('Gamepad connected at index ' + gp.index + ': ' + gp.id +
